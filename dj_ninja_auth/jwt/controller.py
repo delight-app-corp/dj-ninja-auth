@@ -2,6 +2,8 @@ from django.contrib.auth import login as django_login
 from ninja_extra import ControllerBase, api_controller, http_post
 from ninja_extra.permissions import AllowAny
 
+from dj_ninja_auth.jwt.authentication import JWTAuth
+
 from ..controller import (
     AuthenticationController,
     PasswordChangeController,
@@ -51,6 +53,7 @@ class JWTTokenVerificationController(ControllerBase):
         "/verify",
         response={200: schema.success_schema},
         url_name="token_verify",
+        auth=JWTAuth()
     )
     def verify_token(self, token: jwt_schema.verify_schema):
         """Verifies that the provided token is valid.

@@ -12,6 +12,8 @@ from .. import allauth_enabled
 from ..schema_control import SchemaControl
 from .schema_control import RegistrationSchemaControl
 
+from dj_ninja_auth.jwt.authentication import JWTAuth
+
 if allauth_enabled:
     from allauth.account import app_settings as allauth_account_settings
     from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC
@@ -56,6 +58,7 @@ class AccountController(ControllerBase):
         response={200: schema.auth_user_schema},
         permissions=[IsAuthenticated],
         url_name="update_user",
+        auth=JWTAuth()
     )
     def patch_update_user(self, update_user: registration_schema.update_user_schema):
         """Edits the current user's data.
@@ -79,6 +82,7 @@ class AccountController(ControllerBase):
         response={200: schema.success_schema},
         permissions=[IsAuthenticated],
         url_name="delete_user",
+        auth=JWTAuth(),
     )
     def delete_user(self):
         """Soft deleting of the user by setting them to inactive.

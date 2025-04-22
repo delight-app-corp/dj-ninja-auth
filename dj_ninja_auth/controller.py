@@ -9,6 +9,8 @@ from ninja_extra import (
 )
 from ninja_extra.permissions import AllowAny, IsAuthenticated
 
+from dj_ninja_auth.jwt.authentication import JWTAuth
+
 from . import app_settings
 from .schema_control import SchemaControl
 
@@ -47,6 +49,7 @@ class AuthenticationController(ControllerBase):
         permissions=[IsAuthenticated],
         response={200: schema.success_schema},
         url_name="logout",
+        auth=JWTAuth(),
     )
     def logout(self):
         """Logs out the user by flushing session data from the request
@@ -116,6 +119,7 @@ class PasswordChangeController(ControllerBase):
         response={200: schema.password_change_schema.get_response_schema()},
         permissions=[IsAuthenticated],
         url_name="password_change",
+        auth=JWTAuth(),
     )
     def password_change(self, passwords: schema.password_change_schema):
         """A self-service for an authenticated user to change their own password
@@ -139,6 +143,7 @@ class UserController(ControllerBase):
         permissions=[IsAuthenticated],
         response={200: schema.auth_user_schema},
         url_name="get_user",
+        auth=JWTAuth(),
     )
     def get_me(self):
         """An endpoint that fetches the user's information.
